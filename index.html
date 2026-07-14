@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<title>SignSpeak AI</title>
+<meta name="theme-color" content="#0F1420" />
+<link rel="manifest" href="./manifest.json" />
+<link rel="icon" href="./assets/icons/icon-192.png" />
+<link rel="apple-touch-icon" href="./assets/icons/icon-192.png" />
+<link rel="stylesheet" href="./css/base.css" />
+<link rel="stylesheet" href="./css/components.css" />
+<link rel="stylesheet" href="./css/layout.css" />
+<link rel="stylesheet" href="./css/auth.css" />
+</head>
+<body>
+<div class="auth-page">
+  <div style="text-align:center">
+    <svg class="hand-motif" viewBox="0 0 120 120" aria-hidden="true">
+      <line x1="60" y1="60" x2="40" y2="25" /><line x1="60" y1="60" x2="52" y2="18" />
+      <line x1="60" y1="60" x2="66" y2="17" /><line x1="60" y1="60" x2="80" y2="25" />
+      <line x1="60" y1="60" x2="90" y2="70" />
+      <circle class="pulse" cx="60" cy="60" r="4" /><circle cx="40" cy="25" r="3" />
+      <circle cx="52" cy="18" r="3" /><circle cx="66" cy="17" r="3" />
+      <circle cx="80" cy="25" r="3" /><circle cx="90" cy="70" r="3" />
+    </svg>
+    <p>Loading SignSpeak AI…</p>
+    <div class="spinner" style="margin:0 auto"></div>
+  </div>
+</div>
+
+<script src="./js/env.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
+<script type="module">
+  import { getCurrentSession } from './js/supabase.js';
+  import { applySavedPreferences, registerServiceWorker } from './js/utils.js';
+
+  applySavedPreferences();
+  registerServiceWorker();
+
+  (async () => {
+    const session = await getCurrentSession();
+    window.location.replace(session ? 'dashboard.html' : 'login.html');
+  })();
+</script>
+</body>
+</html>

@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<title>Dashboard — SignSpeak AI</title>
+<meta name="theme-color" content="#0F1420" />
+<link rel="manifest" href="./manifest.json" />
+<link rel="icon" href="./assets/icons/icon-192.png" />
+<link rel="stylesheet" href="./css/base.css" />
+<link rel="stylesheet" href="./css/components.css" />
+<link rel="stylesheet" href="./css/layout.css" />
+</head>
+<body>
+<a href="#main" class="skip-link">Skip to main content</a>
+
+<div class="app-shell">
+  <nav class="sidebar" aria-label="Primary">
+    <div class="brand"><span class="dot" aria-hidden="true"></span> SignSpeak AI</div>
+    <ul class="nav-list">
+      <li><a class="nav-link" href="dashboard.html" aria-current="page">🏠 Dashboard</a></li>
+      <li><a class="nav-link" href="learn.html">🎓 Practice</a></li>
+      <li><a class="nav-link" href="history.html">🕘 History</a></li>
+      <li><a class="nav-link" href="settings.html">⚙️ Settings</a></li>
+    </ul>
+    <div class="sidebar-footer">
+      <button class="btn btn--secondary btn--full" data-action="logout">Log Out</button>
+    </div>
+  </nav>
+
+  <main id="main" class="main-content">
+    <div class="topbar">
+      <h1>Welcome, <span id="user-name">there</span></h1>
+      <div class="topbar-actions">
+        <span id="connectivity-badge" class="badge badge--live"><span class="badge-dot"></span>Online</span>
+        <span id="ai-status-badge" class="badge badge--idle">Idle</span>
+      </div>
+    </div>
+
+    <div class="grid grid--stats" style="margin-bottom: var(--space-5);">
+      <div class="card card--tight stat-tile"><span class="value" id="stat-total">0</span><span class="label">Total Recognitions</span></div>
+      <div class="card card--tight stat-tile"><span class="value" id="stat-today">0</span><span class="label">Today</span></div>
+      <div class="card card--tight stat-tile"><span class="value" id="stat-confidence">0%</span><span class="label">Avg Confidence</span></div>
+      <div class="card card--tight stat-tile"><span class="value" id="stat-streak">—</span><span class="label">Active Streak</span></div>
+    </div>
+
+    <div class="grid grid--dashboard">
+      <section class="card" aria-label="Camera">
+        <div class="card-title">
+          <h2>Live Recognition</h2>
+          <span id="recognition-badge" class="badge badge--idle">No hand detected</span>
+        </div>
+
+        <div class="camera-frame">
+          <video id="dashboard-video" playsinline muted aria-label="Camera preview"></video>
+          <canvas id="dashboard-canvas" aria-hidden="true"></canvas>
+          <div id="camera-overlay" class="camera-overlay">
+            <svg class="hand-motif" viewBox="0 0 120 120" aria-hidden="true" style="width:72px;height:72px;">
+              <line x1="60" y1="60" x2="40" y2="25" /><line x1="60" y1="60" x2="52" y2="18" />
+              <line x1="60" y1="60" x2="66" y2="17" /><line x1="60" y1="60" x2="80" y2="25" />
+              <line x1="60" y1="60" x2="90" y2="70" />
+              <circle class="pulse" cx="60" cy="60" r="4" /><circle cx="40" cy="25" r="3" />
+              <circle cx="52" cy="18" r="3" /><circle cx="66" cy="17" r="3" />
+              <circle cx="80" cy="25" r="3" /><circle cx="90" cy="70" r="3" />
+            </svg>
+            <p class="overlay-text">Camera is off</p>
+          </div>
+          <div class="camera-result-badge">
+            <div class="word" id="result-word">—</div>
+            <div id="result-confidence" class="field-hint"></div>
+          </div>
+        </div>
+
+        <div class="camera-controls">
+          <button id="start-camera-btn" class="btn btn--primary">Start Camera</button>
+          <button id="switch-camera-btn" class="btn btn--secondary" aria-label="Switch camera">🔄 Switch Camera</button>
+          <button id="mute-btn" class="btn btn--icon btn--secondary" aria-label="Mute speech">🔊</button>
+        </div>
+      </section>
+
+      <section class="card" aria-label="Recent history">
+        <div class="card-title">
+          <h2>Recent History</h2>
+          <a href="history.html" class="btn btn--sm btn--ghost">View all</a>
+        </div>
+        <ul id="recent-history-list"></ul>
+      </section>
+    </div>
+  </main>
+</div>
+
+<nav class="bottom-nav" aria-label="Primary mobile">
+  <ul>
+    <li><a class="nav-link" href="dashboard.html" aria-current="page">🏠<span>Home</span></a></li>
+    <li><a class="nav-link" href="learn.html">🎓<span>Practice</span></a></li>
+    <li><a class="nav-link" href="history.html">🕘<span>History</span></a></li>
+    <li><a class="nav-link" href="settings.html">⚙️<span>Settings</span></a></li>
+  </ul>
+</nav>
+
+<script src="./js/env.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@mediapipe/hands/hands.js" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@4/dist/tf.min.js" crossorigin="anonymous"></script>
+<script type="module">
+  import { applySavedPreferences, registerServiceWorker } from './js/utils.js';
+  import { wireLogoutButtons } from './js/auth.js';
+  import { initDashboard } from './js/dashboard.js';
+  applySavedPreferences();
+  registerServiceWorker();
+  wireLogoutButtons();
+  initDashboard();
+</script>
+</body>
+</html>

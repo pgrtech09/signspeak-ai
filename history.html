@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<title>History — SignSpeak AI</title>
+<meta name="theme-color" content="#0F1420" />
+<link rel="manifest" href="./manifest.json" />
+<link rel="icon" href="./assets/icons/icon-192.png" />
+<link rel="stylesheet" href="./css/base.css" />
+<link rel="stylesheet" href="./css/components.css" />
+<link rel="stylesheet" href="./css/layout.css" />
+</head>
+<body>
+<a href="#main" class="skip-link">Skip to main content</a>
+
+<div class="app-shell">
+  <nav class="sidebar" aria-label="Primary">
+    <div class="brand"><span class="dot" aria-hidden="true"></span> SignSpeak AI</div>
+    <ul class="nav-list">
+      <li><a class="nav-link" href="dashboard.html">🏠 Dashboard</a></li>
+      <li><a class="nav-link" href="learn.html">🎓 Practice</a></li>
+      <li><a class="nav-link" href="history.html" aria-current="page">🕘 History</a></li>
+      <li><a class="nav-link" href="settings.html">⚙️ Settings</a></li>
+    </ul>
+    <div class="sidebar-footer">
+      <button class="btn btn--secondary btn--full" data-action="logout">Log Out</button>
+    </div>
+  </nav>
+
+  <main id="main" class="main-content">
+    <div class="topbar">
+      <h1>Recognition History</h1>
+      <div class="topbar-actions">
+        <button id="export-csv-btn" class="btn btn--secondary">⬇ Export CSV</button>
+      </div>
+    </div>
+
+    <div class="card" style="margin-bottom: var(--space-5);">
+      <div class="field" style="margin:0;">
+        <label for="search-input" class="visually-hidden">Search history</label>
+        <input type="search" id="search-input" placeholder="Search recognized text…" />
+      </div>
+    </div>
+
+    <div class="card">
+      <div style="overflow-x:auto;">
+        <table style="width:100%; border-collapse: collapse;" id="history-table">
+          <thead>
+            <tr style="text-align:left; border-bottom:1px solid var(--color-border);">
+              <th style="padding: var(--space-3);">Date</th>
+              <th style="padding: var(--space-3);">Time</th>
+              <th style="padding: var(--space-3);">Recognized Text</th>
+              <th style="padding: var(--space-3);">Confidence</th>
+              <th style="padding: var(--space-3);"></th>
+            </tr>
+          </thead>
+          <tbody id="history-table-body"></tbody>
+        </table>
+        <div id="history-empty" class="empty-state visually-hidden">No history found.</div>
+      </div>
+    </div>
+  </main>
+</div>
+
+<nav class="bottom-nav" aria-label="Primary mobile">
+  <ul>
+    <li><a class="nav-link" href="dashboard.html">🏠<span>Home</span></a></li>
+    <li><a class="nav-link" href="learn.html">🎓<span>Practice</span></a></li>
+    <li><a class="nav-link" href="history.html" aria-current="page">🕘<span>History</span></a></li>
+    <li><a class="nav-link" href="settings.html">⚙️<span>Settings</span></a></li>
+  </ul>
+</nav>
+
+<script src="./js/env.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
+<script type="module">
+  import { applySavedPreferences, registerServiceWorker, debounce, formatDateTime, showToast } from './js/utils.js';
+  import { requireAuth } from './js/supabase.js';
+  import { wireLogoutButtons } from './js/auth.js';
+  import { fetchHistory, deleteHistoryEntry, exportHistoryToCSV } from './js/history.js';
+
+  applySavedPreferences();
+  registerServiceWorker();
+  wireLogoutButtons();
+
+  const session = await requireAuth();
+  if (session) {
+    const userId = session.user.id;
+    const tbody = document.getElementById('history-table-body');
+    const emptyEl = document.getElementById('history-empty');
+    const searchInput = document.getElementById('search-input');
+    let currentRows = [];
+
+    async function render(search = '') {
+      currentRows = await fetchHistory(userId, { search });
+      emptyEl.classList.toggle('visually-hidden', currentRows.length > 0);
+      tbody.innerHTML = currentRows
+        .map((row) => {
+          const { date, time } = formatDateTime(row.created_at);
+          return `<tr style="border-bottom:1px solid var(--color-border);" data-id="${row.id}">
+            <td style="padding: var(--space-3);">${date}</td>
+            <td style="padding: var(--space-3);">${time}</td>
+            <td style="padding: var(--space-3); font-weight:600;">${row.recognized_text}</td>
+            <td style="padding: var(--space-3);"><span class="badge badge--idle">${row.confidence}%</span></td>
+            <td style="padding: var(--space-3); text-align:right;">
+              <button class="btn btn--sm btn--danger" data-delete-id="${row.id}">Delete</button>
+            </td>
+          </tr>`;
+        })
+        .join('');
+    }
+    await render();
+
+    searchInput.addEventListener('input', debounce((e) => render(e.target.value), 300));
+
+    tbody.addEventListener('click', async (e) => {
+      const id = e.target.dataset.deleteId;
+      if (!id) return;
+      if (!confirm('Delete this entry?')) return;
+      const ok = await deleteHistoryEntry(id);
+      if (ok) {
+        showToast('Entry deleted.', 'success');
+        render(searchInput.value);
+      } else {
+        showToast('Could not delete entry.', 'error');
+      }
+    });
+
+    document.getElementById('export-csv-btn').addEventListener('click', () => {
+      if (!currentRows.length) {
+        showToast('Nothing to export yet.', 'info');
+        return;
+      }
+      exportHistoryToCSV(currentRows);
+    });
+  }
+</script>
+</body>
+</html>

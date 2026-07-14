@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<title>Log In — SignSpeak AI</title>
+<meta name="theme-color" content="#0F1420" />
+<link rel="manifest" href="./manifest.json" />
+<link rel="icon" href="./assets/icons/icon-192.png" />
+<link rel="stylesheet" href="./css/base.css" />
+<link rel="stylesheet" href="./css/components.css" />
+<link rel="stylesheet" href="./css/layout.css" />
+<link rel="stylesheet" href="./css/auth.css" />
+</head>
+<body>
+<a href="#main" class="skip-link">Skip to main content</a>
+
+<main id="main" class="auth-page">
+  <div class="auth-card card">
+    <div class="auth-header">
+      <svg class="hand-motif" viewBox="0 0 120 120" aria-hidden="true">
+        <line x1="60" y1="60" x2="40" y2="25" /><line x1="60" y1="60" x2="52" y2="18" />
+        <line x1="60" y1="60" x2="66" y2="17" /><line x1="60" y1="60" x2="80" y2="25" />
+        <line x1="60" y1="60" x2="90" y2="70" />
+        <circle class="pulse" cx="60" cy="60" r="4" /><circle cx="40" cy="25" r="3" />
+        <circle cx="52" cy="18" r="3" /><circle cx="66" cy="17" r="3" />
+        <circle cx="80" cy="25" r="3" /><circle cx="90" cy="70" r="3" />
+      </svg>
+      <h1>Welcome back</h1>
+      <p>Sign in to continue recognizing signs.</p>
+    </div>
+
+    <div id="auth-error" class="auth-error-banner" role="alert"></div>
+
+    <form id="login-form" novalidate>
+      <div class="field">
+        <label for="email">Email</label>
+        <input type="email" id="email" name="email" autocomplete="email" required />
+      </div>
+      <div class="field">
+        <label for="password">Password</label>
+        <div class="password-toggle-wrap">
+          <input type="password" id="password" name="password" autocomplete="current-password" required minlength="8" />
+          <button type="button" data-toggle-password="password" aria-label="Show password">👁️</button>
+        </div>
+      </div>
+      <div style="text-align:right; margin-bottom: var(--space-4);">
+        <a href="forgot-password.html">Forgot password?</a>
+      </div>
+      <button type="submit" class="btn btn--primary btn--full">Log In</button>
+    </form>
+
+    <p class="auth-footer">Don't have an account? <a href="signup.html">Sign up</a></p>
+  </div>
+</main>
+
+<script src="./js/env.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
+<script type="module">
+  import { applySavedPreferences, registerServiceWorker } from './js/utils.js';
+  import { initLoginPage, wirePasswordToggles } from './js/auth.js';
+  applySavedPreferences();
+  registerServiceWorker();
+  initLoginPage();
+  wirePasswordToggles();
+</script>
+</body>
+</html>

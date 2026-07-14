@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<title>Practice — SignSpeak AI</title>
+<meta name="theme-color" content="#0F1420" />
+<link rel="manifest" href="./manifest.json" />
+<link rel="icon" href="./assets/icons/icon-192.png" />
+<link rel="stylesheet" href="./css/base.css" />
+<link rel="stylesheet" href="./css/components.css" />
+<link rel="stylesheet" href="./css/layout.css" />
+</head>
+<body>
+<a href="#main" class="skip-link">Skip to main content</a>
+
+<div class="app-shell">
+  <nav class="sidebar" aria-label="Primary">
+    <div class="brand"><span class="dot" aria-hidden="true"></span> SignSpeak AI</div>
+    <ul class="nav-list">
+      <li><a class="nav-link" href="dashboard.html">🏠 Dashboard</a></li>
+      <li><a class="nav-link" href="learn.html" aria-current="page">🎓 Practice</a></li>
+      <li><a class="nav-link" href="history.html">🕘 History</a></li>
+      <li><a class="nav-link" href="settings.html">⚙️ Settings</a></li>
+    </ul>
+    <div class="sidebar-footer">
+      <button class="btn btn--secondary btn--full" data-action="logout">Log Out</button>
+    </div>
+  </nav>
+
+  <main id="main" class="main-content">
+    <div class="topbar"><h1>Practice Mode</h1></div>
+
+    <div class="grid grid--dashboard">
+      <section class="card" aria-label="Practice camera">
+        <div class="card-title">
+          <h2>Show this sign:</h2>
+          <span id="learn-expected-sign" class="badge badge--live" style="font-size:1.1rem; padding: var(--space-2) var(--space-4);">A</span>
+        </div>
+
+        <div class="camera-frame">
+          <video id="learn-video" playsinline muted></video>
+          <canvas id="learn-canvas"></canvas>
+          <div id="learn-overlay" class="camera-overlay">
+            <p>Camera is off</p>
+          </div>
+        </div>
+
+        <p id="learn-score" style="text-align:center; margin-top: var(--space-4); font-family: var(--font-mono); min-height: 1.5em;"></p>
+
+        <div class="camera-controls">
+          <button id="learn-start-btn" class="btn btn--primary">Start Practice Camera</button>
+          <button id="learn-next-btn" class="btn btn--secondary">Skip →</button>
+        </div>
+      </section>
+
+      <section class="card" aria-label="Progress">
+        <div class="card-title"><h2>Your Progress</h2></div>
+        <ul id="learn-progress-list" style="display:flex; flex-wrap:wrap; gap: var(--space-2);"></ul>
+        <p class="field-hint" style="margin-top: var(--space-4);">Hold each sign steady until the score locks in. Your best score per sign is saved on this device.</p>
+      </section>
+    </div>
+  </main>
+</div>
+
+<nav class="bottom-nav" aria-label="Primary mobile">
+  <ul>
+    <li><a class="nav-link" href="dashboard.html">🏠<span>Home</span></a></li>
+    <li><a class="nav-link" href="learn.html" aria-current="page">🎓<span>Practice</span></a></li>
+    <li><a class="nav-link" href="history.html">🕘<span>History</span></a></li>
+    <li><a class="nav-link" href="settings.html">⚙️<span>Settings</span></a></li>
+  </ul>
+</nav>
+
+<script src="./js/env.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@mediapipe/hands/hands.js" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@4/dist/tf.min.js" crossorigin="anonymous"></script>
+<script type="module">
+  import { applySavedPreferences, registerServiceWorker } from './js/utils.js';
+  import { wireLogoutButtons } from './js/auth.js';
+  import { initLearnPage } from './js/learn.js';
+  applySavedPreferences();
+  registerServiceWorker();
+  wireLogoutButtons();
+  initLearnPage();
+</script>
+</body>
+</html>
