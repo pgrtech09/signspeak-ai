@@ -1,0 +1,43 @@
+/* ============================================================
+   css/auth.css — login/signup/forgot-password screens
+   ============================================================ */
+
+.auth-header { text-align: center; margin-bottom: var(--space-6); }
+.auth-header .hand-motif { margin: 0 auto var(--space-4); }
+.auth-header h1 { font-size: 1.6rem; margin-bottom: var(--space-2); }
+.auth-header p { margin: 0; }
+
+.auth-divider { display: flex; align-items: center; gap: var(--space-3); margin: var(--space-5) 0; color: var(--color-text-faint); font-size: 0.8rem; }
+.auth-divider::before, .auth-divider::after { content: ''; flex: 1; height: 1px; background: var(--color-border); }
+
+.auth-footer { text-align: center; margin-top: var(--space-5); font-size: 0.9rem; color: var(--color-text-muted); }
+
+.auth-error-banner {
+  background: rgba(248, 113, 113, 0.1);
+  border: 1px solid rgba(248, 113, 113, 0.3);
+  color: var(--color-danger);
+  border-radius: var(--radius-md);
+  padding: var(--space-3) var(--space-4);
+  font-size: 0.85rem;
+  margin-bottom: var(--space-4);
+  display: none;
+}
+.auth-error-banner.visible { display: block; }
+
+.auth-success-banner {
+  background: rgba(74, 222, 128, 0.1);
+  border: 1px solid rgba(74, 222, 128, 0.3);
+  color: var(--color-success);
+  border-radius: var(--radius-md);
+  padding: var(--space-3) var(--space-4);
+  font-size: 0.85rem;
+  margin-bottom: var(--space-4);
+  display: none;
+}
+.auth-success-banner.visible { display: block; }
+
+.password-strength { display: flex; gap: 4px; margin-top: var(--space-2); }
+.password-strength span { height: 4px; flex: 1; border-radius: var(--radius-full); background: var(--color-surface-strong); }
+.password-strength span.active-weak { background: var(--color-danger); }
+.password-strength span.active-mid { background: var(--color-warn); }
+.password-strength span.active-strong { background: var(--color-success); }
