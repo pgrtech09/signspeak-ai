@@ -21,6 +21,6 @@
 // ============================================================
 
 window.__ENV__ = {
-  SUPABASE_URL: 'https://YOUR-PROJECT-REF.supabase.co',
-  SUPABASE_ANON_KEY: 'YOUR-PUBLIC-ANON-KEY',
+  SUPABASE_URL: 'https://xdmjaprmckudtklgqiup.supabase.co',
+  SUPABASE_ANON_KEY: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InhkbWphcHJtY2t1ZHRrbGdxaXVwIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODQwMjU2MjQsImV4cCI6MjA5OTYwMTYyNH0.NoXxV6C_gz6YeOXzn-9KJOxoQtqh1LPfvmonr20AQhE',
 };
